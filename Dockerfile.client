@@ -1,0 +1,28 @@
+FROM node:14-alpine
+
+# Copy proto
+WORKDIR /sc
+COPY /sc .
+# Install protobuf dependencies
+RUN npm i
+
+# Copy source and install dependencies
+WORKDIR /client
+COPY frontend/package.json .
+
+RUN npm i
+COPY frontend .
+
+# Pass arguments to environment variables
+ARG REACT_APP_WS_END_POINT
+ENV REACT_APP_WS_END_POINT $REACT_APP_WS_END_POINT
+
+# Disable sourcemap
+ENV GENERATE_SOURCEMAP=false
+
+# Build and run source
+RUN npm run build
+
+USER root
+RUN npm i -g serve
+CMD serve -s build -l 5000

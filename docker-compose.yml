@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  redis:
+    image: redis
+    container_name: ntfs_redis_db
+    ports:
+      - 6379:6379
+    restart: always
+
+  backend:
+    image: build.backend
+    container_name: ntfs_backend
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    env_file:
+      - backend/.env.prod.example
+    depends_on:
+      - redis
+    restart:
+      on-failure
+
+  client:
+    image: build.client
+    container_name: ntfs_client
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+      args:
+        - REACT_APP_WS_END_POINT=https://localhost

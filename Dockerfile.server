@@ -1,0 +1,16 @@
+FROM node:14-alpine
+
+# Copy proto
+WORKDIR /sc
+COPY sc .
+# Install protobuf dependencies
+RUN npm i
+
+# Install dependencies
+WORKDIR /backend
+COPY backend/package.json .
+RUN npm i
+# Build and run source
+COPY backend .
+RUN npm run build
+CMD ["npm","run", "start:prod"]

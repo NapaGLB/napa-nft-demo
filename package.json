@@ -1,0 +1,14 @@
+{
+  "name": "crypto_space",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "ISC",
+  "scripts": {
+    "postinstall": "cd backend && yarn && cd .. && cd frontend && yarn && cd .. && cd sc && yarn",
+    "sc-compile": "cd sc && npx hardhat compile",
+    "sc-node": "cd sc && npx hardhat node",
+    "sc-deploy": "cd sc && npx hardhat run --network localhost scripts/deploy.js",
+    "start-back:dev": "cd backend && yarn start:dev",
+    "start-web:dev": "cd frontend && yarn start"
+  }
+}
