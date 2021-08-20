@@ -19,47 +19,12 @@ export class Web3Event implements OnApplicationBootstrap {
   ) { }
 
   async onApplicationBootstrap() {
-    const { web3, contract, latestBlock } = await this.wed3Config.init();
+    const { web3, contract } = await this.wed3Config.init();
     this.web3 = web3;
     this.contract = contract;
-    this.latestBlock = latestBlock;
+    this.latestBlock = await this.transactionService.getLatestBlock();;
 
     this.setupEventListeners();
-  }
-
-  async setupEventListenersForDevlepment() {
-    try {
-      const events = await this.contract.getPastEvents(
-        'allEvents',
-        { filter: {}, fromBlock: this.latestBlock, toBlock: 'latest' },
-        (_err, _event) => { }
-      )
-
-      if (!events || events.length === 0) return;
-      if (events[0].blockNumber < this.latestBlock) return;
-      this.latestBlock = this.latestBlock + 1;
-
-      for (const event of events) {
-        if (Object.keys(event).length === 0) continue;
-        if (!SC_EVENT_MAPPER[event.event]) continue;
-
-        const transactionData = await this.web3.eth.getTransaction(
-          event.transactionHash
-        );
-
-        const transactionDto = TransactionMap.createDTO(
-          this.web3.utils,
-          event,
-          transactionData
-        );
-
-        await this.transactionService.createTransaction(transactionDto);
-        await this.socketGateway.emitMessage(transactionDto);
-      }
-
-    } catch (error) {
-      this.logger.error(error);
-    }
   }
 
   private setupEventListeners() {
@@ -69,16 +34,15 @@ export class Web3Event implements OnApplicationBootstrap {
     this.setupEventListener(this.contract.events.SpaceBidEntered);
     this.setupEventListener(this.contract.events.SpaceBidWithdrawn);
     this.setupEventListener(this.contract.events.SpaceBought);
-
   }
 
   private async setupEventListener(contractEvent: any) {
     try {
       contractEvent({ fromBlock: this.latestBlock }, (_error, _event) => { })
         .on('data', async (event) => {
-          if (!event || event.blockNumber === this.latestBlock) return;
+          const latestBlock = await this.transactionService.getLatestBlock();
 
-          this.latestBlock = this.latestBlock + 1;
+          if (!event || event.blockNumber <= latestBlock) return;
           if (Object.keys(event).length === 0) return;
 
           // Executed trade market
@@ -95,6 +59,7 @@ export class Web3Event implements OnApplicationBootstrap {
           );
 
           await this.transactionService.createTransaction(transactionDto);
+          await this.transactionService.syncLatestBlock(event.blockNumber);
           await this.socketGateway.emitMessage(transactionDto);
         });
     } catch (error) {

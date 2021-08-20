@@ -20,7 +20,7 @@ From a command line terminal :
 ```
  yarn sc-deploy
 ```
-5. Run docker of Redis database
+5. Run docker for dev (only Redis database)
 ```
  docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
@@ -31,6 +31,17 @@ From a command line terminal :
 7. Start front end
 ```
  yarn start-web:dev
+```
+
+#### Docker notes
+1. Run docker for all (Redis, Backend, Frontend)
+```
+ docker-compose up -d
+```
+
+2. Run docker for ec2 environment (Using for Ec2 with Redis, Backend)
+```
+ docker-compose -f docker-compose.yml -f docker-compose.back.yml up -d
 ```
 
 #### Folder Structure

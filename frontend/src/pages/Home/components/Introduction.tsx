@@ -12,7 +12,7 @@ const Introduction: React.FC = () => (
     <Box w='1050px' m='180px auto 0'>
       <Row justify='center' gutter={[0, 24]}>
         <StyledSpace>
-          <StyledButton $bgType='highlight'>Blockchain</StyledButton>
+          <StyledButton $bgType='highlight'>Rinkeby Testnet</StyledButton>
         </StyledSpace>
         <StyledSpace>
           <Text $size='48px' strong>

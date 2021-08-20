@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { LatestBlockReposity } from 'src/models/latestBlock/latestBlock.reposity';
 import { IAccountStats, IOverallStats, ITransaction } from 'src/models/transaction/transaction.interface';
 import { TransactionReposity } from 'src/models/transaction/transaction.reposity';
 import { DecimalUtils } from 'src/utils/decimal.utils';
@@ -10,7 +11,8 @@ const LIMIT_SOLD_NUMBER = 60;
 export class TransactionService {
 
   constructor(
-    private readonly transactionRepo: TransactionReposity
+    private readonly transactionRepo: TransactionReposity,
+    private readonly latestBlockRepo: LatestBlockReposity
   ) { }
 
   async createTransaction(historyData: ITransaction) {
@@ -91,6 +93,14 @@ export class TransactionService {
       sold: soldsByAccount,
       soldETHTotal: soldsByAccountTotal
     } as IAccountStats;
+  }
+
+  async getLatestBlock(): Promise<number> {
+    return this.latestBlockRepo.get();
+  }
+
+  async syncLatestBlock(blockNumber: number) {
+    return this.latestBlockRepo.sync(blockNumber);
   }
 
   private getLargestSales(transactions: ITransaction[]): ITransaction[] {

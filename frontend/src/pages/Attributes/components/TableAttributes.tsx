@@ -33,12 +33,10 @@ const TableAttributes: React.FC<any> = (props: any) => {
             {formartNumber(price, 2)}Ξ
           </Text>
         </div>
-      )
+      );
     }
 
-    return (
-      <Text $size='18px'>No space for sale</Text>
-    );
+    return <Text $size='18px'>No space for sale</Text>;
   };
 
   const renderMoreExamples = (moreExample: Array<any>) =>
@@ -196,7 +194,7 @@ const TableAttributes: React.FC<any> = (props: any) => {
 
 const SpaceContainer = styled.div`
   display: inline-block;
-  background-color: #dfdbe8;
+  background-color: #638596;
   padding: 4px;
 `;
 

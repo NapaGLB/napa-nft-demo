@@ -237,7 +237,7 @@ const Account: React.FC = (props: any) => {
     const spaceFound = spacesWithColor.find((space: any) => space.id === spaceId);
     if (spaceFound?.isBid) return '#8e6fb6';
     if (spaceFound?.isForSale) return '#95554f';
-    return '#dfdbe8';
+    return '#638596';
   };
   return (
     <MainContainer>
@@ -260,7 +260,7 @@ const Account: React.FC = (props: any) => {
         <Row justify='center' gutter={[0, 15]}>
           <Col span={8}>
             <Title>Etherscan</Title>
-            <a href={`https://etherscan.io/address/${id}`} target='blank'>
+            <a href={`https://rinkeby.etherscan.io/address/${id}`} target='blank'>
               <LinkText>{id.slice(0, 20)}</LinkText>
             </a>
           </Col>

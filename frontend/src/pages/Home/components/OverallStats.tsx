@@ -7,13 +7,16 @@ import Box from 'ui/Box';
 import Button from 'ui/Button';
 import { Text } from 'ui/Typography';
 import { getContract } from 'utils/getContract';
-import request from 'utils/request';
 import Spaces from 'utils/spaces';
 import formatNumber from 'utils/format';
 import { ETH_USD_PRICE } from 'environment';
 
-const OverallStats: React.FC = () => {
-  const [data, setData] = useState([] as any);
+interface IHomeComponentProps {
+  overall: any;
+}
+
+const OverallStats: React.FC<IHomeComponentProps> = (props: any) => {
+  const { overall } = props;
   const { connector, library } = useWallet();
   const [saleData, setSaleData] = useState([] as any);
   useEffect(() => {
@@ -60,13 +63,6 @@ const OverallStats: React.FC = () => {
       )) ||
     0;
 
-  useEffect(() => {
-    const getData = async () => {
-      const result = await request.getData('/transactions/stats/overall', {});
-      if (result && result.status === 200) setData(result.data);
-    };
-    getData();
-  }, []);
   return (
     <Box w='1050px' m='auto'>
       <Row justify='center' gutter={[0, 24]}>
@@ -95,13 +91,17 @@ const OverallStats: React.FC = () => {
         </Col>
         <Col span={8}>
           <StatsNameText>Number of Sales (Last 12 Months)</StatsNameText>
-          <StatsValueText>{data.numberOfSales || 0}</StatsValueText>
+          <StatsValueText>{overall.numberOfSales || 0}</StatsValueText>
         </Col>
         <Col span={8}>
           <StatsNameText>Total Value of All Sales (Lifetime)</StatsNameText>
           <StatsValueText>
-            {data.totalLifeTimeValueOfAllSales || 0}Ξ ($
-            {formatNumber(((data.totalLifeTimeValueOfAllSales || 0) * ETH_USD_PRICE).toString(), 2)})
+            {overall.totalLifeTimeValueOfAllSales || 0}Ξ ($
+            {formatNumber(
+              ((overall.totalLifeTimeValueOfAllSales || 0) * ETH_USD_PRICE).toString(),
+              2
+            )}
+            )
           </StatsValueText>
         </Col>
         <ButtonContainer>
@@ -109,7 +109,7 @@ const OverallStats: React.FC = () => {
             <OrderedListOutlined />
             Top Owners
           </StyledButton>
-          <StyledButton $bgType='primary' onClick={() => window.open("/attributes", "_blank")}>
+          <StyledButton $bgType='primary' onClick={() => window.open('/attributes', '_blank')}>
             <DeploymentUnitOutlined />
             All Types
           </StyledButton>

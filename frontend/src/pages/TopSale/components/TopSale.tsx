@@ -84,7 +84,7 @@ const BigTitle = styled(Text)`
 const ImageContainer = styled.div`
   width: 85%;
   height: 150px;
-  background-color: #dfdbe8;
+  background-color: #638596;
   position: relative;
   margin-bottom: 20px;
 `;

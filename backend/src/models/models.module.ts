@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConnectionsModule } from 'src/connections/connections.module';
+import { LatestBlockReposity } from './latestBlock/latestBlock.reposity';
 import { TransactionReposity } from './transaction/transaction.reposity';
 
 @Module({
@@ -7,10 +8,12 @@ import { TransactionReposity } from './transaction/transaction.reposity';
     ConnectionsModule
   ],
   providers: [
-    TransactionReposity
+    TransactionReposity,
+    LatestBlockReposity
   ],
   exports: [
-    TransactionReposity
+    TransactionReposity,
+    LatestBlockReposity
   ]
 })
 export class ModelsModule { }

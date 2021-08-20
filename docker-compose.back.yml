@@ -1,0 +1,10 @@
+version: "3.2"
+
+services:
+  client:
+    image: node:14-alpine
+    container_name: ntfs_empty_client
+    build:
+      dockerfile: Dockerfile.empty
+    command : "true"
+    entrypoint : "true"

@@ -5,7 +5,6 @@ import { Text } from 'ui/Typography';
 import Box from 'ui/Box';
 import Spaces from 'utils/spaces';
 import { Link } from 'react-router-dom';
-import request from 'utils/request';
 import formatNumber from 'utils/format';
 import { useSocket } from 'socketio-hooks';
 import dayjs from 'dayjs';
@@ -32,7 +31,13 @@ dayjs.updateLocale('en', {
     yy: '%d years'
   }
 });
-const RecentTransactions: React.FC = () => {
+
+interface IHomeComponentProps {
+  overall: any;
+}
+
+const RecentTransactions: React.FC<IHomeComponentProps> = (props: IHomeComponentProps) => {
+  const { overall } = props;
   const [data, setData] = useState([] as any);
 
   useSocket('transactions', '', async (socketData) => {
@@ -42,18 +47,15 @@ const RecentTransactions: React.FC = () => {
   });
 
   useEffect(() => {
-    const getData = async () => {
-      const result = await request.getData('/transactions/stats/overall', {});
-      if (result && result.status === 200) setData(result.data.recentTransactions);
-    };
-    getData();
-  }, []);
+    setData(overall.recentTransactions);
+  }, [overall]);
 
   const getBackground = (type: string) => {
     switch (type) {
       case 'Offered':
         return '#95554f';
       case 'Bid':
+      case 'Bid Withdrawn':
         return '#8e6fb6';
       case 'Sold':
         return '#638596';

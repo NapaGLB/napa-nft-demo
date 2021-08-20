@@ -1,16 +1,20 @@
-version: "3"
+version: "3.2"
 
 services:
   redis:
     image: redis
     container_name: ntfs_redis_db
-    ports:
-      - 6379:6379
+    volumes:
+      - type: bind
+        source: ./redis
+        target: /data
     restart: always
 
   backend:
     image: build.backend
     container_name: ntfs_backend
+    ports:
+      - 3000:3000
     build:
       context: .
       dockerfile: Dockerfile.server
@@ -24,8 +28,16 @@ services:
   client:
     image: build.client
     container_name: ntfs_client
+    ports:
+      - 3002:5000
     build:
       context: .
       dockerfile: Dockerfile.client
       args:
-        - REACT_APP_WS_END_POINT=https://localhost
+        REACT_APP_LIMIT_SPACE_SUPPLY_TOTAL: 12
+        REACT_APP_SC_MARKET_CONTRACT_ADDRESS: '0x5CfbCD326a6c35237C19889D83EA53903065b365'
+        REACT_APP_SC_TOKEN_CONTRACT_ADDRESS: '0x7bFfF05d494C4fAD1b18445B76Cf14cF16076f33'
+        REACT_APP_SC_INIT_OWNER_ADDRESS: '0xA75B2d7b277919c224B198743C88EfE608BA8c1e'
+        REACT_APP_ETH_USD_PRICE: 3000
+    env_file:
+      - frontend/.env.prod.example

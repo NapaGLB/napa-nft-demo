@@ -1,29 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Col, Row, Space } from 'antd';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Box from 'ui/Box';
 import Spaces from 'utils/spaces';
 import { Link } from 'react-router-dom';
-import request from 'utils/request';
 import dayjs from 'dayjs';
 import formatNumber from 'utils/format';
 import { ETH_USD_PRICE } from 'environment';
 
-const LargestSales: React.FC = () => {
-  const [data, setData] = useState({
-    largestSales: []
-  } as any);
+interface IHomeComponentProps {
+  overall: any;
+}
+const LargestSales: React.FC<IHomeComponentProps> = (props: IHomeComponentProps) => {
+  const { overall } = props;
 
-  useEffect(() => {
-    const getData = async () => {
-      const result = await request.getData('/transactions/stats/overall', {});
-      if (result && result.status === 200) setData(result.data);
-    };
-    getData();
-  }, []);
-
-  const mappedSpaces = data.largestSales.map((item: any) => {
+  const mappedSpaces = overall?.largestSales?.map((item: any) => {
     const spacesData: any = Spaces.find((space: any) => space.id === Number(item.spaceId));
     return { ...item, img: spacesData.img };
   });
@@ -90,7 +82,7 @@ const LinkText = styled(Text)`
 const ImageContainer = styled.div`
   width: 90%;
   height: 180px;
-  background-color: #dfdbe8;
+  background-color: #638596;
   position: relative;
   margin-bottom: 20px;
 `;
